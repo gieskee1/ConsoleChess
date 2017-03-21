@@ -28,7 +28,6 @@ public class MoveTest {
         move = new Move(testPiece1,testLocation1);
         move2 = new Move(testPiece1,testLocation1);
         move3 = new Move(testPiece2,testLocation2);
-        //testLocation2 = new Location(2,);
 
     }
 
@@ -49,6 +48,7 @@ public class MoveTest {
         Assert.assertEquals(move.getPiece(), testPiece1);
     }
 
+    //test getters and setters
     @Test
     public void getTo() throws Exception {
         Assert.assertEquals(move.getTo(), testLocation1);

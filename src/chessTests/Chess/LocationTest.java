@@ -28,18 +28,20 @@ public class LocationTest {
         Location clone = null;
     }
 
+    //tests is location is equal to a location and not equal to another
     @Test
     public void equals() throws Exception {
         Assert.assertEquals(location1.equals(location2), true);
         Assert.assertEquals(location1.equals(location3), false);
     }
-
+    //tests for x coordinate equality
     @Test
     public void x() throws Exception {
         Assert.assertEquals(location1.X(),1);
         Assert.assertEquals(location3.X(), 0);
     }
 
+    //tests for y coordinate equality
     @Test
     public void y() throws Exception {
         Assert.assertEquals(location1.Y(),0);
@@ -63,6 +65,7 @@ public class LocationTest {
         Assert.assertEquals(location1.equals(location3), false);
     }
 
+    //test if tile to string works
     @Test
     public void testToString() throws Exception {
         Assert.assertEquals(location1.toString(), "B8");

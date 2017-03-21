@@ -41,6 +41,7 @@ public class Menu extends Application {
         BorderPane borderPane = new BorderPane();
         Label welcomeLabel = new Label("Welcome to the Chess GUI!");
 
+        //create option buttons for menu
         Button onePlayerBtn = new Button("One Player");
         Button twoPlayerBtn = new Button("Two Player");
         Button loadBtn = new Button("Load");
@@ -58,6 +59,7 @@ public class Menu extends Application {
         loadBtn.setMinHeight(50);
         statsBtn.setMinHeight(50);
 
+        //display buttons vertically in the middle
         VBox vBox = new VBox();
         vBox.setSpacing(50);
         vBox.setAlignment(Pos.CENTER);
@@ -78,6 +80,7 @@ public class Menu extends Application {
         stage.setMinHeight(700);
         stage.show();
 
+        //send to two player game (not with AI)
         twoPlayerBtn.setOnAction(e -> {
 //            stats.incGames();
 //            stats.storeData();
@@ -85,13 +88,13 @@ public class Menu extends Application {
             GameBoard gamebrd = new GameBoard(game);
             try {
                 gamebrd.start(null);
-                gamebrd.setIsOnePlayer(false);
+                gamebrd.setIsOnePlayer(false); //no AI
                 gamebrd.setBoard(stage);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
         });
-
+        //send to one player game (with AI)
         onePlayerBtn.setOnAction(e -> {
 //            stats.incGames();
 //            stats.incCPU();
@@ -100,7 +103,7 @@ public class Menu extends Application {
             GameBoard gamebrd = new GameBoard(game);
             try {
                 gamebrd.start(null);
-                gamebrd.setIsOnePlayer(true);
+                gamebrd.setIsOnePlayer(true); //with AI
                 gamebrd.setBoard(stage);
 
                 //gamebrd.setBoard(stage);
@@ -110,7 +113,7 @@ public class Menu extends Application {
             }
         });
 
-
+        //load last game
         loadBtn.setOnAction((ActionEvent e) -> {
             File autoSaveFile = new File(BASE_SAVE_LOCATION + "src\\Data\\Autosave.txt");
             try {
@@ -134,7 +137,7 @@ public class Menu extends Application {
                 e1.printStackTrace();
             }
         });
-
+        //send to stats page
         statsBtn.setOnAction(e -> {
 //            stats.retrieveData();
             StatsPage statsPg = new StatsPage();

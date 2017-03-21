@@ -41,6 +41,7 @@ public class GameBoard extends Application {
     public GameBoard(ChessGame g){
         game = g;
     }
+    //first clicks and second click will be used to determine player's move
     private int firstClickX = -1;
     private int firstClickY = -1;
     private int secondClickX = -1;
@@ -49,17 +50,17 @@ public class GameBoard extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        //set images for chess pieces
         for (ChessPiece chessPiece : game.getBoard().getBoardArrayList()) {
             chessPiece.setImage();
         }
     }
-
+    //determines if AI or not
     public void setIsOnePlayer(boolean isOnePlayer) {
         this.isOnePlayer = isOnePlayer;
     }
 
     public void setBoard (Stage stage) throws Exception {
-        String picPath = "/GUI/assets/";
 
         BorderPane borderPane = new BorderPane();
         GridPane grid = new GridPane();
@@ -84,6 +85,7 @@ public class GameBoard extends Application {
             grid.add(chessPiece.getImage(), chessPiece.getLocation().X(), chessPiece.getLocation().Y());
         }
 
+        //set menu at top of window
         HBox hBox = new HBox();
         Button backBtn = new Button("< Menu");
         backBtn.setMinHeight(25);
@@ -96,6 +98,7 @@ public class GameBoard extends Application {
 
         hBox.getChildren().addAll(backBtn,saveBtn,loadBtn,replayBtn);
 
+        //format window
         borderPane.setTop(hBox);
         borderPane.setCenter(grid);
         Scene scene = new Scene(borderPane, 640, 665);
@@ -105,10 +108,11 @@ public class GameBoard extends Application {
         stage.setMaxHeight(700);
         stage.show();
         BoardDisplay.printBoard(game.getBoard());
-        //highlight square when clicked
+             //highlight square when clicked
               grid.setOnMouseClicked( e -> {
             int col = (int)Math.floor((e.getSceneX())/ 80); //subtract to adjust for stroke size
             int row = (int)Math.floor((e.getSceneY()-25)/ 80);
+            //get coordinates of click
             if (firstClickX == -1) {
                 firstClickX = col;
                 firstClickY = row;
@@ -125,7 +129,9 @@ public class GameBoard extends Application {
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
-                }else{
+                }
+                //if new tile is selected
+                else{
                 try {
                     Location from = new Location(firstClickX,firstClickY);
                     Location to = new Location(secondClickX,secondClickY);
@@ -140,23 +146,29 @@ public class GameBoard extends Application {
 
                         repaint();
                         boolean isEndOfGame = game.getBoard().getAllValidMoves(game.getCurrentPlayer()).size() == 0;
+                        //if game has not ended, AI moves
                         if (isOnePlayer && !isEndOfGame) {
                             RandomAI randomAI = new RandomAI(game);
                             Move aiMove = randomAI.getNextMove();
                             game.playMove(aiMove.getPiece().getLocation(), aiMove.getTo());
                             Save.autoSave(game);
                             repaint();
-                        } else if (isEndOfGame) {
+                        }
+                        //if game has ended, display message
+                        else if (isEndOfGame) {
                             JOptionPane.showMessageDialog(null, game.getState().toString());
                             System.out.println(game.getState().toString());
                         }
                         if (game.getState() == ChessGame.GameState.PLAY) {
                             setBoard(stage);
-                        } else {
+                        }
+                        //go back to menu once game has ended
+                        else {
                             Menu menu = new Menu();
                             menu.start(stage);
                         }
                     }
+                    //if move is invalid, display message
                     else{
                         displayAlert("Alert Message", "Invalid move!");
                         setBoard(stage);
@@ -166,7 +178,7 @@ public class GameBoard extends Application {
 
                     }
                 }}
-
+                //place yellow highlight over tile when selected
                 Rectangle rectangle = new Rectangle(80, 80);
                 rectangle.setFill(Color.YELLOW);
                 rectangle.setOpacity(.5);
@@ -174,6 +186,7 @@ public class GameBoard extends Application {
                     grid.add(rectangle, col, row);
                 }
             });
+        //if back button selected, send back to menu
         backBtn.setOnAction(e -> {
             Menu menu = new Menu();
             try {
@@ -182,6 +195,7 @@ public class GameBoard extends Application {
                 e1.printStackTrace();
             }
         });
+        //is save button selected, save game
         saveBtn.setOnAction(e -> {
             try {
                 Save.save("AutoSave","save");
@@ -189,6 +203,7 @@ public class GameBoard extends Application {
                 e1.printStackTrace();
             }
         });
+        //if load button selected, load game
         loadBtn.setOnAction(e -> {
             game = Load.Load("save", game);
             try {
@@ -197,17 +212,18 @@ public class GameBoard extends Application {
                 e1.printStackTrace();
             }
         });
+        //replays in the console
         replayBtn.setOnAction((ActionEvent e) -> {
             Replay.replayConsole();
         });
 
     }
-
+    //repaint board
     private void repaint() {
         BoardDisplay.clearConsole();
         BoardDisplay.printBoard(game.getBoard());
     }
-
+    //go back and forth between tile colors
     private void setRectangleColor(Rectangle rectangle, int col, int row){
 
         if((col % 2 == 0) ^ (row % 2 == 0)){
@@ -224,6 +240,7 @@ public class GameBoard extends Application {
         this.game = game;
     }
 
+    //display alert message when invalid move
     public static void displayAlert(String title, String message) {
         Stage window = new Stage();
 
